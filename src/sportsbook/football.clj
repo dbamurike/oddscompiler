@@ -5,7 +5,7 @@
     alias))
 
 (defn is-result? [result selection-result]
-  (->> selection-result :status (= result)))
+  (= selection-result result))
 
 (def win (partial alias-result :win true))
 (def win? (partial is-result? :win))
@@ -74,7 +74,6 @@
                                                           (scope? "goal" %)
                                                           (team? "away" %)) event-log))
                                  ]
-                             (println team-1 team-2)
                              (< team-1 team-2))))
 
 
@@ -92,11 +91,10 @@
                                                (game-part? "full-time" %)
                                                (scope? "goal" %)
                                                (team? "away" %)) event-log))]
-                  (println team-1 team-2)
                   (> team-1 team-2))))
 
 (defmarket match-winner
-           :is-auto-cancel? false
+           :is-auto-cancel? true
            :selections [home away]
            :id 1)
 
