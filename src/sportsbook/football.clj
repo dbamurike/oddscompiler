@@ -28,11 +28,16 @@
        ))
 
 (defn get-compare [key value dict]
-  (= value  (get dict key false)))
+  (= value (get dict key false)))
 
 (def game-part? (partial get-compare :game-part))
 (def scope? (partial get-compare :scope))
 (def team? (partial get-compare :team))
+
+
+(defn count-events [event-log & {:keys [game-part scope team]}]
+  [game-part scope team])
+
 
 (defn fill-auto-cancel [cancel? selections]
   (if (and cancel? (every? lose? (map :status selections)))
@@ -149,7 +154,7 @@
                                 (scope? scope %)) event-log))]
     (> goals total)))
 
-(defmarket total 
+(defmarket total-2-goals
   :is-auto-cancel? true
   :MARKET-PARAMS  {:total 2 :game-part "full-time" :scope "goal"}
   :selections [over under]
@@ -165,4 +170,4 @@
 
 (settle match-winner test-log)
 
-(settle total test-log)
+(settle total-2-goals test-log)
