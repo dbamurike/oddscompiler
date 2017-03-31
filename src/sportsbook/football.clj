@@ -5,6 +5,8 @@
 
 ;;;; Markets & selectoins
 
+;;; Match winner by FT
+
 (sl/defselection away
   :settle-fn 
   (let [scope (:scope MARKET-PARAMS)
@@ -32,10 +34,14 @@
         ]
     (= team-1 team-2)))
 
+;; Market
+
 (sl/defmarket match-winner
   :is-auto-cancel? true
   :MARKET-PARAMS  {:game-part full-time :scope "goal"}
   :selections [home draw away])
+
+;;;; Total of goal FT
 
 (sl/defselection under
   :settle-fn
@@ -55,9 +61,13 @@
         ]
     (> goals total)))
 
+;; Market
+
 (sl/defmarket total-2-goals
   :is-auto-cancel? true
   :MARKET-PARAMS  {:total 2 :game-part full-time :scope "goal"}
   :selections [over under]
   )
+
+
 
