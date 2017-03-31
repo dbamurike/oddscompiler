@@ -40,26 +40,24 @@
 (sl/defselection under
   :settle-fn
   (let [total (:total MARKET-PARAMS)
-        game-part (:sl/game-part MARKET-PARAMS)
+        game-part (:game-part MARKET-PARAMS)
         scope (:scope MARKET-PARAMS)
-        goals  (count (filter #(and
-                                (sl/game-part? game-part %)
-                                (sl/scope? scope %)) event-log))]
+        goals  (sl/count-values ["and" {"sl/scope?" scope  "sl/game-part?" game-part}])
+        ]
     (< goals total)))
 
 (sl/defselection over
   :settle-fn
   (let [total (:total MARKET-PARAMS)
-        game-part (:sl/game-part MARKET-PARAMS)
+        game-part (:game-part MARKET-PARAMS)
         scope (:scope MARKET-PARAMS)
-        goals  (count (filter #(and
-                                (sl/game-part? game-part %)
-                                (sl/scope? scope %)) event-log))]
+        goals  (sl/count-values ["and" {"sl/scope?" scope  "sl/game-part?" game-part}])
+        ]
     (> goals total)))
 
 (sl/defmarket total-2-goals
   :is-auto-cancel? true
-  :MARKET-PARAMS  {:total 2 :game-part "full-time" :scope "goal"}
+  :MARKET-PARAMS  {:total 2 :game-part full-time :scope "goal"}
   :selections [over under]
   )
 

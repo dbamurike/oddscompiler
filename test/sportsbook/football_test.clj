@@ -5,15 +5,9 @@
 
 (def test-log [{:scope "goal" :game-part "H1" :team "home"}
                {:scope "goal" :game-part "H2" :team "away"}
-               {:scope "corner" :game-part "full-time" :team "away"}])
+               {:scope "corner" :game-part "H1" :team "away"}])
 
 (deftest match-winner-test 
-  (testing "Match winner away"
-    (is (= :lose  (:status  (sl/settle-selection away test-log {:game-part full-time :scope "point"})))))
-  (testing "Match winner home"
-    (is (= :lose  (:status (sl/settle-selection home test-log {:game-part full-time  :scope "point"})))))
-  (testing "Match winner draw"
-    (is (= :win  (:status (sl/settle-selection draw test-log {:game-part full-time :scope "point"})))))
   (testing "Match winner market"
     (is (= {:MARKET-PARAMS {:game-part #{"H1" "H2"}, :scope "goal"}, 
             :selections '({:name :home, :status :lose} 
@@ -21,6 +15,15 @@
                           {:name :away, :status :lose}), 
             :name :match-winner, 
             :is-auto-cancel? true}
-           (sl/settle match-winner test-log))))
+           (sl/settle match-winner test-log)))))
 
-)
+(deftest match-total-cancel
+  (testing "Under lose"
+    (is (= :lose (:status (sl/settle-selection under test-log {:total 2, :game-part full-time, :scope "goal"})))))
+  (testing "Match total 2 with auto cancel"
+    (is (= {:MARKET-PARAMS {:total 2, :game-part full-time, :scope "goal"}, 
+            :selections '({:name :over, :status :cancel}
+                          {:name :under, :status :cancel}), 
+            :name :total-2-goals, 
+            :is-auto-cancel? true}
+           (sl/settle total-2-goals test-log)))))
