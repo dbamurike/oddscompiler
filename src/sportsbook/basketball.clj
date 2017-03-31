@@ -8,14 +8,8 @@
   :settle-fn
   (let [game-part (:game-part MARKET-PARAMS)
         scope (:scope MARKET-PARAMS)
-        team-1 (reduce + (map :value (filter #(and
-                                                (sl/game-part? game-part %)
-                                                (sl/scope? scope %)
-                                                (sl/team? "home" %)) event-log)))
-        team-2 (reduce + (map :value (filter #(and
-                                                (sl/game-part? game-part %)
-                                                (sl/scope? scope %)
-                                                (sl/team? "away" %)) event-log)))]
+        team-1 (sl/sum-values ["and" {"sl/scope?" scope  "sl/game-part?" game-part "sl/team?" "home"}])
+        team-2 (sl/sum-values ["and" {"sl/scope?" scope  "sl/game-part?" game-part "sl/team?" "away"}])]
     (< team-1 team-2)))
 
 
@@ -23,15 +17,9 @@
   :settle-fn
   (let [game-part (:game-part MARKET-PARAMS)
         scope (:scope MARKET-PARAMS)
-        team-1 (reduce + (map :value (filter #(and
-                                                (sl/game-part? game-part %)
-                                                (sl/scope? scope %)
-                                                (sl/team? "home" %)) event-log)))
-        team-2 (reduce + (map :value (filter #(and
-                                                (sl/game-part? game-part %)
-                                                (sl/scope? scope %)
-                                                (sl/team? "away" %)) event-log)))]
-    (> team-1 team-2)))
+        team-1 (sl/sum-values ["and" {"sl/scope?" scope  "sl/game-part?" game-part "sl/team?" "home"}])
+        team-2 (sl/sum-values ["and" {"sl/scope?" scope  "sl/game-part?" game-part "sl/team?" "away"}])]
+  (> team-1 team-2)))
 
 
 (sl/defmarket match-winner
