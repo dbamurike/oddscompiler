@@ -43,6 +43,7 @@
 
 ;;;; Total of goal FT
 
+
 (sl/defselection under
   :settle-fn
   (let [total (:total MARKET-PARAMS)

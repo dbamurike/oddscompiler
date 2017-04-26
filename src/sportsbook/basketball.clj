@@ -5,7 +5,7 @@
 
 (sl/defselection away
   :settle-fn
-  (let [game-part (:game-part MARKET-PARAMS)
+  (sl/let+ [game-part (:game-part MARKET-PARAMS)
         scope (:scope MARKET-PARAMS)
         team-1 (sl/sum-values ["and" {"sl/scope?" scope  "sl/game-part?" game-part "sl/team?" "home"}])
         team-2 (sl/sum-values ["and" {"sl/scope?" scope  "sl/game-part?" game-part "sl/team?" "away"}])]
@@ -14,7 +14,7 @@
 
 (sl/defselection home
   :settle-fn
-  (let [game-part (:game-part MARKET-PARAMS)
+  (sl/let+ [game-part (:game-part MARKET-PARAMS)
         scope (:scope MARKET-PARAMS)
         team-1 (sl/sum-values ["and" {"sl/scope?" scope  "sl/game-part?" game-part "sl/team?" "home"}])
         team-2 (sl/sum-values ["and" {"sl/scope?" scope  "sl/game-part?" game-part "sl/team?" "away"}])]
@@ -30,8 +30,12 @@
 ;;; Total of 3 points 
 
 (sl/defselection under-value
+  :trigger-fn (when (or 
+                     (sl/event-in-log? {:game-part "Q1" :scope "game-part" :value "finished"})
+                     (win? (sl/settle-selection over-valuer)))
+                )
   :settle-fn
-  (let [total (:total MARKET-PARAMS)
+  (sl/let+ [total (:total MARKET-PARAMS)
         game-part (:game-part MARKET-PARAMS)
         scope (:scope MARKET-PARAMS)
         value (:value MARKET-PARAMS)
@@ -40,8 +44,13 @@
     (< goals total)))
 
 (sl/defselection over-value
+  :trigger-fn (when (or 
+                     (sl/event-in-log? {:game-part "Q1" :scope "game-part" :value "finished"})
+                     (win? (sl/settle-selection over-valuer)))
+                )
+
   :settle-fn
-  (let [total (:total MARKET-PARAMS)
+  (sl/let+ [total (:total MARKET-PARAMS)
         game-part (:game-part MARKET-PARAMS)
         value (:value MARKET-PARAMS)
         scope (:scope MARKET-PARAMS)
@@ -56,3 +65,4 @@
   :MARKET-PARAMS  {:total 2 :game-part "Q1" :scope "point" :value 3}
   :selections [over-value under-value]
   )
+

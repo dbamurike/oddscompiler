@@ -1,4 +1,17 @@
-(ns sportsbook.slang)
+(ns sportsbook.slang
+  (:require [clojure.tools.trace :as trace]))
+
+;;; trace & debug macros
+
+(defmacro let+ [bindings & body]
+  `(let [~@(mapcat (fn [[n v]]
+                       (if (or (vector? n) (map? n))
+                           [n v]
+                         [n v '_ `(println (name '~n) ":" ~v)]))
+                   (partition 2 bindings))]
+     ~@body))
+
+;;; predicates helpers
 
 (defn is-contain? [result selection-result]
   (= selection-result result))
@@ -7,6 +20,7 @@
   (when (is-contain? alternative result)
     alias))
 
+;;; predicates
 
 (def win (partial alias-result :win true))
 (def win? (partial is-contain? :win))

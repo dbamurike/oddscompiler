@@ -1,14 +1,21 @@
 (ns sportsbook.basketball-test
   (:require [clojure.test :refer :all]
             [sportsbook.slang :as sl]
-            [sportsbook.basketball :refer :all]))
+            [sportsbook.basketball :refer :all]
+            [clojure.tools.trace :as trace]))
 
 (def test-log [{:scope "point" :game-part "Q1" :team "home" :value 2}
                {:scope "point" :game-part "Q1" :team "away" :value 2}
                {:scope "point" :game-part "Q1" :team "away" :value 2}
                {:scope "point" :game-part "Q1" :team "away" :value 2}
                {:scope "point" :game-part "Q1" :team "home" :value 3}
-               {:scope "point" :game-part "Q1" :team "away" :value 2}
+               {:scope "point" :game-part "Q1" :team "away" :value 2}              
+               {:scope "point" :game-part "Q2" :team "away" :value 2}
+               {:scope "point" :game-part "Q2" :team "away" :value 2}
+               {:scope "point" :game-part "Q2" :team "home" :value 2}
+               {:scope "point" :game-part "Q2" :team "away" :value 2}
+               {:scope "point" :game-part "Q2" :team "home" :value 2}
+               {:scope "point" :game-part "Q2" :team "away" :value 2}
                ])
 
 (deftest match-winner-test 
